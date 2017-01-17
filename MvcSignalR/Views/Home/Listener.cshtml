@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Chat";
+}
+<h2>Ready to receive messages</h2>
+<div class="container">
+    <input type="hidden" id="displayname" />
+    <ul id="discussion"></ul>
+</div>
+
+@section scripts {
+    <script src="~/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(function () {
+            var chat = $.connection.chatHub;
+            chat.client.addNewMessageToPage = function (name, message) {
+                $('#discussion').append('<li><strong>' + htmlEncode(name)+ '</strong>: ' + htmlEncode(message) + '</li>');
+            };
+            $.connection.hub.start();
+        });
+
+        function htmlEncode(value) {
+            return $('<div />').text(value).html();
+        }
+    </script>
+}
